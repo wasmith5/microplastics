@@ -1,5 +1,5 @@
 # USAGE
-# python file_detection.py --prototxt models/MobileNetSSD_deploy.prototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/cars2.avi --output videos/output.avi
+# python file_detection.py --prototxt models/deployalex.prototxt.txt --model models/bvlc_alexnet.caffemodel --input videos/glassbeads.avi --output videos/output.avi
 
 # import the necessary packages
 from pyimagesearch.centroidtracker import CentroidTracker
@@ -18,11 +18,11 @@ ap.add_argument("-p", "--prototxt", required=True,
     help="path to Caffe 'deploy' prototxt file")
 ap.add_argument("-m", "--model", required=True,
     help="path to Caffe pre-trained model")
-ap.add_argument("-c", "--confidence", type=float, default=0.2,
+ap.add_argument("-c", "--confidence", type=float, default=0.1,
     help="minimum probability to filter weak detections")
 ap.add_argument("-o", "--output", required=True,
     help="path to output video file")
-ap.add_argument("-f", "--fps", type=int, default=10,
+ap.add_argument("-f", "--fps", type=int, default=20,
     help="FPS of output video")
 ap.add_argument("-co", "--codec", type=str, default="XVID",
     help="codec of output video")
@@ -78,7 +78,7 @@ while(vs.isOpened()):
 		
 	
     if ret == True:
-
+        
         blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5)
         
 	    # pass the blob through the network and obtain the detections and
