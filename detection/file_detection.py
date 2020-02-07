@@ -1,9 +1,8 @@
 # USAGE
-# python file_detection.py --prototxt models/MobileNetSSD_deploy.prototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/glassbeads.avi --output videos/output.avi
+# python detection/file_detection.py --prototxt models/MobileNetSSD_deploy.prototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/people2.avi --output videos/output.avi
 
 # import the necessary packages
 from pyimagesearch.centroidtracker import CentroidTracker
-from pyimagesearch.trackableobject import TrackableObject
 from imutils.video import VideoStream
 from imutils.video import FPS
 import numpy as np
@@ -18,7 +17,7 @@ ap.add_argument("-p", "--prototxt", required=True,
     help="path to Caffe 'deploy' prototxt file")
 ap.add_argument("-m", "--model", required=True,
     help="path to Caffe pre-trained model")
-ap.add_argument("-c", "--confidence", type=float, default=0.1,
+ap.add_argument("-c", "--confidence", type=float, default=0.6,
     help="minimum probability to filter weak detections")
 ap.add_argument("-o", "--output", required=True,
     help="path to output video file")
