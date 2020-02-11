@@ -3,7 +3,7 @@
 
 # import the necessary packages
 from sklearn.preprocessing import LabelEncoder
-from keras.applications import MobileNet
+from keras.applications.mobilenet import MobileNet
 from keras.applications import imagenet_utils
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import load_img
@@ -73,7 +73,7 @@ for split in (config.TRAIN, config.TEST, config.VAL):
 		# flattened volume
 		batchImages = np.vstack(batchImages)
 		features = model.predict(batchImages, batch_size=config.BATCH_SIZE)
-		features = features.reshape((features.shape[0], 7 * 7 * 512))
+		features = features.reshape((features.shape[0], 7 * 7 * 1024))
 
 		# loop over the class labels and extracted features
 		for (label, vec) in zip(batchLabels, features):
