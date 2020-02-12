@@ -2,14 +2,12 @@
 # python detection/file_detection.py --prototxt models/MobileNetSSD_deploy.prototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/people2.avi --output videos/output.avi
 
 # import the necessary packages
-from keras.models import load_model
 from pyimagesearch.centroidtracker import CentroidTracker
 from imutils.video import VideoStream
 from imutils.video import FPS
 import numpy as np
 import argparse
 import imutils
-import pickle
 import time
 from cv2 import cv2
 
@@ -46,7 +44,6 @@ ct = CentroidTracker()
 
 # load our serialized model from disk
 print("[INFO] loading model...")
-model = pickle.loads(open("transferlearning/output/model.cpickle", "rb").read())
 net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 
 # initialize the video stream, allow the cammera sensor to warmup,
