@@ -1,7 +1,7 @@
 <annotation>
 	<folder>test</folder>
 	<filename>3.jpg</filename>
-	<path>C:\Users\Mark Cheng\Documents\GitHub\microplastics\transferlearning\dataset\resized\test\3.jpg</path>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\test\3.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -477,6 +477,18 @@
 			<ymin>509</ymin>
 			<xmax>354</xmax>
 			<ymax>554</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>367</xmin>
+			<ymin>287</ymin>
+			<xmax>420</xmax>
+			<ymax>328</ymax>
 		</bndbox>
 	</object>
 </annotation>
