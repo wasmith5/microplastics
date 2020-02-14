@@ -1,0 +1,20 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 0 issues that require attention
+--------------------------------------------------------------------------------
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'transferlearning/objectdetection/generate_tfrecord.py'
+ outputting to 'transferlearning/objectdetection/generate_tfrecord.py'
+--------------------------------------------------------------------------------
+
+27:8: INFO: Renamed 'tf.app.flags' to 'tf.compat.v1.app.flags'
+53:9: INFO: Renamed 'tf.gfile.GFile' to 'tf.io.gfile.GFile'
+107:13: INFO: Renamed 'tf.python_io.TFRecordWriter' to 'tf.io.TFRecordWriter'
+134:4: INFO: Renamed 'tf.app.run' to 'tf.compat.v1.app.run'
+--------------------------------------------------------------------------------
+
