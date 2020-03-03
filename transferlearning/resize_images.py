@@ -1,6 +1,6 @@
 import os
 import glob
-import cv2
+from cv2 import cv2
 
 if __name__ == "__main__":
     import argparse
@@ -11,13 +11,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--raw-dir",
         help="Directory path to raw images.",
-        default="./data/raw",
+        default="./transferlearning/data/raw",
         type=str,
     )
     parser.add_argument(
         "--save-dir",
         help="Directory path to save resized images.",
-        default="./data/images",
+        default="./transferlearning/data/images",
         type=str,
     )
     parser.add_argument(

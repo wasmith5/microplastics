@@ -1,7 +1,7 @@
 <annotation>
 	<folder>train</folder>
 	<filename>2.jpg</filename>
-	<path>C:\Users\Mark Cheng\Documents\GitHub\microplastics\transferlearning\dataset\resized\train\2.jpg</path>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\train\2.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -1149,6 +1149,42 @@
 			<ymin>136</ymin>
 			<xmax>795</xmax>
 			<ymax>186</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>325</xmin>
+			<ymin>329</ymin>
+			<xmax>377</xmax>
+			<ymax>368</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>363</xmin>
+			<ymin>340</ymin>
+			<xmax>414</xmax>
+			<ymax>384</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>458</xmin>
+			<ymin>307</ymin>
+			<xmax>515</xmax>
+			<ymax>349</ymax>
 		</bndbox>
 	</object>
 </annotation>
