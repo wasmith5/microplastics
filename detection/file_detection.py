@@ -1,5 +1,5 @@
 # USAGE
-# python detection/file_detection.py --prototxt models/MobileNetSSD_deploy.prototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/people2.avi --output videos/output.avi
+# python detection/file_detection.py --protrototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/people2.avi --output videos/output.avi
 
 # import the necessary packages
 from pyimagesearch.centroidtracker import CentroidTracker
