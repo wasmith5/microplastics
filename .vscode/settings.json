@@ -1,8 +1,4 @@
 {
-<<<<<<< HEAD
     "python.pythonPath": "C:\\Users\\zmcke\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe",
-=======
-    "python.pythonPath": "C:\\Python37\\python.exe",
->>>>>>> 4bb5b7261a5f34fa43d295e29e769045a1959e49
     "git.ignoreLimitWarning": true
 }
