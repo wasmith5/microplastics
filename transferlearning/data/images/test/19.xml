@@ -1,38 +1,38 @@
 <annotation>
 	<folder>test</folder>
-	<filename>15.jpg</filename>
-	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\test\15.jpg</path>
+	<filename>19.png</filename>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\test\19.png</path>
 	<source>
 		<database>Unknown</database>
 	</source>
 	<size>
 		<width>800</width>
 		<height>600</height>
-		<depth>1</depth>
+		<depth>3</depth>
 	</size>
 	<segmented>0</segmented>
-	<object>
-		<name>fiber</name>
-		<pose>Unspecified</pose>
-		<truncated>1</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>520</xmin>
-			<ymin>1</ymin>
-			<xmax>799</xmax>
-			<ymax>396</ymax>
-		</bndbox>
-	</object>
 	<object>
 		<name>fiber</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>301</xmin>
-			<ymin>224</ymin>
-			<xmax>365</xmax>
-			<ymax>251</ymax>
+			<xmin>355</xmin>
+			<ymin>266</ymin>
+			<xmax>593</xmax>
+			<ymax>320</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>585</xmin>
+			<ymin>33</ymin>
+			<xmax>602</xmax>
+			<ymax>48</ymax>
 		</bndbox>
 	</object>
 </annotation>
