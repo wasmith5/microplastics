@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train</folder>
+	<filename>90-90.png</filename>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\train\90-90.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>1</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>326</xmin>
+			<ymin>44</ymin>
+			<xmax>390</xmax>
+			<ymax>89</ymax>
+		</bndbox>
+	</object>
+</annotation>

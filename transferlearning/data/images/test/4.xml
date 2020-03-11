@@ -41,30 +41,6 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>484</xmin>
-			<ymin>291</ymin>
-			<xmax>553</xmax>
-			<ymax>303</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>fiber</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>335</xmin>
-			<ymin>536</ymin>
-			<xmax>418</xmax>
-			<ymax>551</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>fiber</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
 			<xmin>275</xmin>
 			<ymin>24</ymin>
 			<xmax>360</xmax>
@@ -72,15 +48,15 @@
 		</bndbox>
 	</object>
 	<object>
-		<name>bead</name>
+		<name>size</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>587</xmin>
-			<ymin>29</ymin>
-			<xmax>601</xmax>
-			<ymax>41</ymax>
+			<xmin>609</xmin>
+			<ymin>389</ymin>
+			<xmax>729</xmax>
+			<ymax>419</ymax>
 		</bndbox>
 	</object>
 </annotation>

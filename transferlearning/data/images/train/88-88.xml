@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train</folder>
+	<filename>88-88.png</filename>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\train\88-88.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>1</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fiber</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>385</xmin>
+			<ymin>427</ymin>
+			<xmax>575</xmax>
+			<ymax>516</ymax>
+		</bndbox>
+	</object>
+</annotation>

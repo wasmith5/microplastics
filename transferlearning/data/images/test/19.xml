@@ -24,15 +24,15 @@
 		</bndbox>
 	</object>
 	<object>
-		<name>bead</name>
+		<name>size</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>585</xmin>
-			<ymin>33</ymin>
-			<xmax>602</xmax>
-			<ymax>48</ymax>
+			<xmin>608</xmin>
+			<ymin>391</ymin>
+			<xmax>730</xmax>
+			<ymax>418</ymax>
 		</bndbox>
 	</object>
 </annotation>

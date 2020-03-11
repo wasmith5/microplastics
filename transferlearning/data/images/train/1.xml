@@ -35,4 +35,16 @@
 			<ymax>552</ymax>
 		</bndbox>
 	</object>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>638</xmin>
+			<ymin>510</ymin>
+			<xmax>800</xmax>
+			<ymax>599</ymax>
+		</bndbox>
+	</object>
 </annotation>

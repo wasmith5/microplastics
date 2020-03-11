@@ -1,0 +1,14 @@
+<annotation>
+	<folder>train</folder>
+	<filename>46-46.png</filename>
+	<path>C:\Users\zmcke\OneDrive\Documents\GitHub\microplastics\transferlearning\data\images\train\46-46.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>1</depth>
+	</size>
+	<segmented>0</segmented>
+</annotation>

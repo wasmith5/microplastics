@@ -23,28 +23,4 @@
 			<ymax>359</ymax>
 		</bndbox>
 	</object>
-	<object>
-		<name>fiber</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>280</xmin>
-			<ymin>174</ymin>
-			<xmax>474</xmax>
-			<ymax>202</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>fiber</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>257</xmin>
-			<ymin>354</ymin>
-			<xmax>360</xmax>
-			<ymax>372</ymax>
-		</bndbox>
-	</object>
 </annotation>
