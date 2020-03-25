@@ -1,5 +1,5 @@
 # USAGE
-# python detection/file_detection.py --input videos/people2.avi --output videos/output.avi
+# python detection/plasticdetection.py --input videos/people2.avi --output videos/output.avi
 
 # import the necessary packages
 from pyimagesearch.centroidtracker import CentroidTracker
@@ -41,58 +41,31 @@ category_index = label_map_util.create_category_index(categories)
 # Size, in inches, of the output images.
 IMAGE_SIZE = (12, 8)
 
-
 def run_inference_for_single_image(image, graph):
-    with graph.as_default():
-        with tf.compat.v1.Session() as sess:
-            # Get handles to input and output tensors
-            ops = tf.compat.v1.get_default_graph().get_operations()
-            all_tensor_names = {
-                output.name for op in ops for output in op.outputs}
-            tensor_dict = {}
-            for key in [
-                'num_detections', 'detection_boxes', 'detection_scores',
-                'detection_classes', 'detection_masks'
-            ]:
-                tensor_name = key + ':0'
-                if tensor_name in all_tensor_names:
-                    tensor_dict[key] = tf.compat.v1.get_default_graph().get_tensor_by_name(
-                        tensor_name)
-            if 'detection_masks' in tensor_dict:
-                # The following processing is only for single image
-                detection_boxes = tf.squeeze(
-                    tensor_dict['detection_boxes'], [0])
-                detection_masks = tf.squeeze(
-                    tensor_dict['detection_masks'], [0])
-                # Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
-                real_num_detection = tf.cast(
-                    tensor_dict['num_detections'][0], tf.int32)
-                detection_boxes = tf.slice(detection_boxes, [0, 0], [
-                                           real_num_detection, -1])
-                detection_masks = tf.slice(detection_masks, [0, 0, 0], [
-                                           real_num_detection, -1, -1])
-                detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
-                    detection_masks, detection_boxes, image.shape[0], image.shape[1])
-                detection_masks_reframed = tf.cast(
-                    tf.greater(detection_masks_reframed, 0.5), tf.uint8)
-                # Follow the convention by adding back the batch dimension
-                tensor_dict['detection_masks'] = tf.expand_dims(
-                    detection_masks_reframed, 0)
-            image_tensor = tf.compat.v1.get_default_graph().get_tensor_by_name('image_tensor:0')
+    if 'detection_masks' in tensor_dict:
+        # The following processing is only for single image
+        detection_boxes = tf.squeeze(tensor_dict['detection_boxes'], [0])
+        detection_masks = tf.squeeze(tensor_dict['detection_masks'], [0])
+        # Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
+        real_num_detection = tf.cast(tensor_dict['num_detections'][0], tf.int32)
+        detection_boxes = tf.slice(detection_boxes, [0, 0], [real_num_detection, -1])
+        detection_masks = tf.slice(detection_masks, [0, 0, 0], [real_num_detection, -1, -1])
+        detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(detection_masks, detection_boxes, image.shape[0], image.shape[1])
+        detection_masks_reframed = tf.cast(tf.greater(detection_masks_reframed, 0.5), tf.uint8)
+        # Follow the convention by adding back the batch dimension
+        tensor_dict['detection_masks'] = tf.expand_dims(detection_masks_reframed, 0)
+    image_tensor = tf.compat.v1.get_default_graph().get_tensor_by_name('image_tensor:0')
 
-            # Run inference
-            output_dict = sess.run(tensor_dict,
-                                   feed_dict={image_tensor: np.expand_dims(image, 0)})
+    # Run inference
+    output_dict = sess.run(tensor_dict,feed_dict={image_tensor: np.expand_dims(image, 0)})
 
-            # all outputs are float32 numpy arrays, so convert types as appropriate
-            output_dict['num_detections'] = int(
-                output_dict['num_detections'][0])
-            output_dict['detection_classes'] = output_dict[
-                'detection_classes'][0].astype(np.uint8)
-            output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
-            output_dict['detection_scores'] = output_dict['detection_scores'][0]
-            if 'detection_masks' in output_dict:
-                output_dict['detection_masks'] = output_dict['detection_masks'][0]
+    # all outputs are float32 numpy arrays, so convert types as appropriate
+    output_dict['num_detections'] = int(output_dict['num_detections'][0])
+    output_dict['detection_classes'] = output_dict['detection_classes'][0].astype(np.uint8)
+    output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
+    output_dict['detection_scores'] = output_dict['detection_scores'][0]
+    if 'detection_masks' in output_dict:
+        output_dict['detection_masks'] = output_dict['detection_masks'][0]
     return output_dict
 
 ap = argparse.ArgumentParser()
@@ -113,67 +86,57 @@ args = vars(ap.parse_args())
 CLASSES = [ "fiber", "bead", "size" ]
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
-ct = CentroidTracker()
+#ct = CentroidTracker()
 
 print("[INFO] starting video...")
 vs = cv2.VideoCapture(args["input"])
-fourcc = cv2.VideoWriter_fourcc(*args["codec"])
+#fourcc = cv2.VideoWriter_fourcc(*args["codec"])
 writer = None
 
-total = 0
+#total = 0
 
-# loop over the frames from the video stream
-while (vs.isOpened()):
-
-    ret,frame = vs.read()
-
-    if writer is None:
-        w = vs.get(3)
-        h = vs.get(4)
-        w = int(w)
-        h = int(h)
-        writer = cv2.VideoWriter(args["output"], fourcc, args["fps"], (w, h), True)
-
-    if ret == True:
-
-        frame_expanded = np.expand_dims(frame, axis=0)
-        output_dict = run_inference_for_single_image(frame, detection_graph)
-        vis_util.visualize_boxes_and_labels_on_image_array(
-            frame,
-            output_dict['detection_boxes'],
-            output_dict['detection_classes'],
-            output_dict['detection_scores'],
-            category_index,
-            instance_masks=output_dict.get('detection_masks'),
-            use_normalized_coordinates=True,
-            line_thickness=8)
-
-        boxes = output_dict['detection_boxes']
-        draw = boxes.shape[0]
-        scores = output_dict['detction_scores']
-        min_score = args["confidence"]
-        rects = []
-
-        for i in range(min(draw, boxes.shape[0])):
-            if scores is None or scores[i] > min_score:
-                class_name = category_index[output_dict['detection_classes'][i]]['name']
-
-        writer.write(frame)
-
-        cv2.imshow("Microplastics Detection", frame)
-        key = cv2.waitkey(1) & 0xFF
-
-        if key == ord("q"):
-            break
-    else:
-        break
+# loop over the frames from the video
+with detection_graph.as_default():
+    with tf.compat.v1.Session() as sess:
+        ops = tf.compat.v1.get_default_graph().get_operations()
+        all_tensor_names = {output.name for op in ops for output in op.outputs}
+        tensor_dict = {}
+        for key in [
+          'num_detections', 'detection_boxes', 'detection_scores',
+          'detection_classes', 'detection_masks'
+          ]:
+            tensor_name = key + ':0'
+            if tensor_name in all_tensor_names:
+                tensor_dict[key] = tf.compat.v1.get_default_graph().get_tensor_by_name(
+              tensor_name)
+        while True:
+            ret, image_np = vs.read()
+            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+            image_np_expanded = np.expand_dims(image_np, axis=0)
+            # Actual detection.
+            output_dict = run_inference_for_single_image(image_np, detection_graph)
+            # Visualization of the results of a detection.
+            vis_util.visualize_boxes_and_labels_on_image_array(
+              image_np,
+              output_dict['detection_boxes'],
+              output_dict['detection_classes'],
+              output_dict['detection_scores'],
+              category_index,
+              instance_masks=output_dict.get('detection_masks'),
+              use_normalized_coordinates=True,
+              line_thickness=8)
+            cv2.imshow('Microplastics Detection', cv2.resize(image_np, (800,600)))
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                vs.release()
+                cv2.destroyAllWindows()
+                break
 
     
 
-for key, value in areas.items():
-    print("Area of ", key, ":", value)
+#for key, value in areas.items():
+    #print("Area of ", key, ":", value)
 
-print("Total detections: ", total+1)
+#print("Total detections: ", total+1)
 
 # do a bit of cleanup
 vs.release()

@@ -45,11 +45,8 @@ totalDetections = 0
 # loop over the frames from the video stream
 while(vs.isOpened()):
 
-	# grab the frame from the threaded video stream and resize it
+	# grab the frame from the video and resize it
 	# to have a maximum width of 400 pixels
-	#
-	# ZACH: could change size to what we need for our project once we start testing
-	#
     ret,frame = vs.read()
 
     if writer is None:
@@ -62,7 +59,7 @@ while(vs.isOpened()):
 	
     if ret == True:
         
-        blob = cv2.dnn.blobFromImage(cv2.resize(frame, (224, 224)), 0.007843, (224, 224), 127.5)
+        blob = cv2.dnn.blobFromImage(frame, 1, (224, 224), 127.5)
         
 	    # pass the blob through the network and obtain the detections and
 	    # predictions
