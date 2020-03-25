@@ -2,14 +2,10 @@
 # python detection/file_detection.py --protrototxt --model models/MobileNetSSD_deploy.caffemodel --input videos/people2.avi --output videos/output.avi
 
 # import the necessary packages
-from pyimagesearch.centroidtracker import CentroidTracker
-from imutils.video import VideoStream
-from imutils.video import FPS
 import numpy as np
 import argparse
-import imutils
-import time
 from cv2 import cv2
+from pyimagesearch.centroidtracker import CentroidTracker
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
