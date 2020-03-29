@@ -1,28 +1,14 @@
-# USAGE
-# python detection/plasticdetection.py --input videos/people2.avi --output videos/output.avi
-
 # import the necessary packages
-from pyimagesearch.centroidtracker import CentroidTracker
+# from pyimagesearch.centroidtracker import CentroidTracker
 import numpy as np
-import argparse
 from cv2 import cv2
-import os
-import six.moves.urllib as urllib
-import sys
-import tarfile
 import tensorflow as tf
-import zipfile
-
-from collections import defaultdict
-from io import StringIO
-from PIL import Image
 from object_detection.utils import ops as utils_ops
-
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
 PATH_TO_CKPT = 'models/frozen_inference_graph.pb'
-PATH_TO_LABELS = os.path.join('models', 'label_map.pbtxt')
+PATH_TO_LABELS = 'models/label_map.pbtxt'
 PATH_TO_TEST_IMAGES_DIR = 'transferlearning/data/images/test'
 
 detection_graph = tf.Graph()
@@ -68,29 +54,11 @@ def run_inference_for_single_image(image, graph):
         output_dict['detection_masks'] = output_dict['detection_masks'][0]
     return output_dict
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--confidence", type=float, default=0.5,
-    help="minimum probability to filter weak detections")
-ap.add_argument("-o", "--output", required=True,
-    help="path to output video file")
-ap.add_argument("-f", "--fps", type=int, default=30,
-    help="FPS of output video")
-ap.add_argument("-co", "--codec", type=str, default="XVID",
-    help="codec of output video")
-ap.add_argument("-i", "--input", required=True,
-    help="path to input video file")
-args = vars(ap.parse_args())
-
-# initialize the list of class labels that our model was trained to
-# detect, then generate a set of bounding box colors for each class
-CLASSES = [ "fiber", "bead", "size" ]
-COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
-
 #ct = CentroidTracker()
 
 print("[INFO] starting video...")
-vs = cv2.VideoCapture(args["input"])
-#fourcc = cv2.VideoWriter_fourcc(*args["codec"])
+vs = cv2.VideoCapture('videos/captured001.mp4')
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
 writer = None
 
 #total = 0
@@ -109,29 +77,43 @@ with detection_graph.as_default():
             if tensor_name in all_tensor_names:
                 tensor_dict[key] = tf.compat.v1.get_default_graph().get_tensor_by_name(
               tensor_name)
-        while True:
-            ret, image_np = vs.read()
-            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-            image_np_expanded = np.expand_dims(image_np, axis=0)
-            # Actual detection.
-            output_dict = run_inference_for_single_image(image_np, detection_graph)
-            # Visualization of the results of a detection.
-            vis_util.visualize_boxes_and_labels_on_image_array(
-              image_np,
-              output_dict['detection_boxes'],
-              output_dict['detection_classes'],
-              output_dict['detection_scores'],
-              category_index,
-              instance_masks=output_dict.get('detection_masks'),
-              use_normalized_coordinates=True,
-              line_thickness=8)
-            cv2.imshow('Microplastics Detection', cv2.resize(image_np, (800,600)))
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                vs.release()
-                cv2.destroyAllWindows()
-                break
 
-    
+        while(vs.isOpened()):
+
+            ret, image_np = vs.read()
+
+            if writer is None:
+                w = vs.get(3)
+                h = vs.get(4)
+                w = int(w)
+                h = int(h)
+                writer = cv2.VideoWriter('videos/output.avi', fourcc, 30, (w,h), True)
+            
+            if ret == True:
+
+                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                image_np_expanded = np.expand_dims(image_np, axis=0)
+                # Actual detection.
+                output_dict = run_inference_for_single_image(image_np, detection_graph)
+                # Visualization of the results of a detection.
+                vis_util.visualize_boxes_and_labels_on_image_array(
+                    image_np,
+                    output_dict['detection_boxes'],
+                    output_dict['detection_classes'],
+                    output_dict['detection_scores'],
+                    category_index,
+                    instance_masks=output_dict.get('detection_masks'),
+                    use_normalized_coordinates=True,
+                    line_thickness=8)
+
+                
+                writer.write(image_np)
+
+                cv2.imshow('Microplastics Detection', cv2.resize(image_np, (800,600)))
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            else:
+                break
 
 #for key, value in areas.items():
     #print("Area of ", key, ":", value)

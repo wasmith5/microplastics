@@ -11,13 +11,13 @@ from pyimagesearch.centroidtracker import CentroidTracker
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--confidence", type=float, default=0.6,
     help="minimum probability to filter weak detections")
-ap.add_argument("-o", "--output", required=True,
+ap.add_argument("-o", "--output", default="videos/output.avi",
     help="path to output video file")
 ap.add_argument("-f", "--fps", type=int, default=30,
     help="FPS of output video")
 ap.add_argument("-co", "--codec", type=str, default="XVID",
     help="codec of output video")
-ap.add_argument("-i", "--input", required=True,
+ap.add_argument("-i", "--input", default="videos/captured001.mp4",
     help="path to input video file")
 args = vars(ap.parse_args())
 
@@ -31,7 +31,7 @@ ct = CentroidTracker()
 
 # load our serialized model from disk
 print("[INFO] loading model...")
-net = cv2.dnn.readNetFromTensorflow('models/frozen_inference_graph.pb', 'models/label_map.pbtxt')
+net = cv2.dnn.readNetFromTensorflow('models/frozen_inference_graph.pb', 'models/new_label_map.pbtxt')
 
 # initialize and preprocess the input video
 print("[INFO] starting video...")
@@ -45,9 +45,12 @@ totalDetections = 0
 # loop over the frames from the video stream
 while(vs.isOpened()):
 
+    print("[INFO] Looping through frames...")
 	# grab the frame from the video and resize it
 	# to have a maximum width of 400 pixels
     ret,frame = vs.read()
+    rows = frame.shape[0]
+    cols = frame.shape[1]
 
     if writer is None:
         w = vs.get(3)
@@ -56,11 +59,9 @@ while(vs.isOpened()):
         h = int(h)
         writer = cv2.VideoWriter(args["output"], fourcc, args["fps"], (w, h), True)
 		
-	
     if ret == True:
         
-        blob = cv2.dnn.blobFromImage(frame, 1, (224, 224), 127.5)
-        
+        blob = cv2.dnn.blobFromImage(frame, size=(300, 300), swapRB=True)
 	    # pass the blob through the network and obtain the detections and
 	    # predictions
         net.setInput(blob)
@@ -68,10 +69,12 @@ while(vs.isOpened()):
         rects = []
 
 	    # loop over the detections
-        for i in np.arange(0, detections.shape[2]):
+        for detection in detections[0, 0, :, :]:
+            print("[INFO] Frame ")
+            print(detection)
 		    # extract the confidence (i.e., probability) associated with
 		    # the prediction
-            confidence = detections[0, 0, i, 2]
+            confidence = detections[0, 0, detection, 2]
 
 		    # filter out weak detections by ensuring the `confidence` is
 		    # greater than the minimum confidence
@@ -85,8 +88,8 @@ while(vs.isOpened()):
 			    #
 			    # ZACH: * we can use this to detect the size of the object *
 			    #
-                idx = int(detections[0, 0, i, 1])
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                idx = int(detections[0, 0, detection, 1])
+                box = detections[0, 0, detection, 3:7] * np.array([w, h, w, h])
                 rects.append(box.astype("int"))
 
                 (startX, startY, endX, endY) = box.astype("int")
@@ -124,7 +127,7 @@ while(vs.isOpened()):
     else:
         break
 
-
+print("[INFO] End of video...")
 for key, value in areas.items():
     print("Area of ", key, ":", value)
 
