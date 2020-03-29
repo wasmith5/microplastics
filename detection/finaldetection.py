@@ -1,5 +1,5 @@
 # USAGE
-# python detection/finaldetection.py --input videos/glassbeads.avi --output videos/output.avi
+# python detection/finaldetection.py --input path/to/input/video --output path/to/output/video
 
 # import the necessary packages
 import numpy as np
@@ -17,13 +17,13 @@ ap.add_argument("-f", "--fps", type=int, default=30,
     help="FPS of output video")
 ap.add_argument("-co", "--codec", type=str, default="XVID",
     help="codec of output video")
-ap.add_argument("-i", "--input", default="videos/captured001.mp4",
+ap.add_argument("-i", "--input", default="videos/captured010.mp4",
     help="path to input video file")
 args = vars(ap.parse_args())
 
 # initialize the list of class labels that our model was trained to
 # detect, then generate a set of bounding box colors for each class
-CLASSES = [ "bead", "fiber", "size" ]
+CLASSES = [ " ", "bead", "fiber", "size" ]
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
 # declare the centroid tracker class used for tracking objects
@@ -39,18 +39,17 @@ vs = cv2.VideoCapture(args["input"])
 fourcc = cv2.VideoWriter_fourcc(*args["codec"])
 writer = None
 
-# initialize the total detections count
+# initialize the total detections counts
 totalDetections = 0
+totalBeads = -1
+totalFibers = -1
 
 # loop over the frames from the video stream
 while(vs.isOpened()):
 
-    print("[INFO] Looping through frames...")
-	# grab the frame from the video and resize it
-	# to have a maximum width of 400 pixels
+    # grab the frame from the video and resize it
+    # to have a maximum width of 400 pixels
     ret,frame = vs.read()
-    rows = frame.shape[0]
-    cols = frame.shape[1]
 
     if writer is None:
         w = vs.get(3)
@@ -60,36 +59,28 @@ while(vs.isOpened()):
         writer = cv2.VideoWriter(args["output"], fourcc, args["fps"], (w, h), True)
 		
     if ret == True:
-        
+
         blob = cv2.dnn.blobFromImage(frame, size=(300, 300), swapRB=True)
-	    # pass the blob through the network and obtain the detections and
-	    # predictions
+        # pass the blob through the network and obtain the detections and
+        # predictions
         net.setInput(blob)
         detections = net.forward()
         rects = []
 
-	    # loop over the detections
-        for detection in detections[0, 0, :, :]:
-            print("[INFO] Frame ")
-            print(detection)
-		    # extract the confidence (i.e., probability) associated with
-		    # the prediction
-            confidence = detections[0, 0, detection, 2]
+        # loop over the detections
+        for i in np.arange(0, detections.shape[2]):
+            # extract the confidence (i.e., probability) associated with
+            # the prediction
+            confidence = detections[0, 0, i, 2]
 
-		    # filter out weak detections by ensuring the `confidence` is
-		    # greater than the minimum confidence
-		    #
-		    # ZACH: we may need to lower the confidence level in order to accomodate for the blurry images gotten from water
-		    #
+            # filter out weak detections by ensuring the `confidence` is
+            # greater than the minimum confidence
             if confidence > args["confidence"]:
-			    # extract the index of the class label from the
-			    # `detections`, then compute the (x, y)-coordinates of
-			    # the bounding box for the object
-			    #
-			    # ZACH: * we can use this to detect the size of the object *
-			    #
-                idx = int(detections[0, 0, detection, 1])
-                box = detections[0, 0, detection, 3:7] * np.array([w, h, w, h])
+                # extract the index of the class label from the
+                # `detections`, then compute the (x, y)-coordinates of
+                # the bounding box for the object
+                idx = int(detections[0, 0, i, 1])
+                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 rects.append(box.astype("int"))
 
                 (startX, startY, endX, endY) = box.astype("int")
@@ -132,6 +123,8 @@ for key, value in areas.items():
     print("Area of ", key, ":", value)
 
 print("Total detections: ", totalDetections+1)
+print("Total beads: ", totalBeads+1)
+print("Total fibers: ", totalFibers+1)
 
 # do a bit of cleanup
 vs.release()
