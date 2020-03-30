@@ -52,13 +52,13 @@ class CentroidTracker():
 			# to update
 			return self.objects
 
-		# initialize an array of input centroids for the current frame
+		# initialize an array of input centroids and areas for the current frame
 		inputCentroids = np.zeros((len(rects), 2), dtype="int")
 		inputAreas = np.zeros((len(rects), 2), dtype="int")
 
 		# loop over the bounding box rectangles
 		for (i, (startX, startY, endX, endY)) in enumerate(rects):
-			# use the bounding box coordinates to derive the centroid
+			# use the bounding box coordinates to derive the centroid and area
 			cX = int((startX + endX) / 2.0)
 			cY = int((startY + endY) / 2.0)
 			inputCentroids[i] = (cX, cY)
