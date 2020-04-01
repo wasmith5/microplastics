@@ -1,5 +1,5 @@
 # USAGE
-# python detection/finaldetection.py --input path/to/input/video --output path/to/output/video
+# python detection/plasticdetection.py --input path/to/input/video --output path/to/output/video
 
 # import the necessary packages
 import numpy as np
@@ -17,7 +17,7 @@ ap.add_argument("-f", "--fps", type=int, default=30,
     help="FPS of output video")
 ap.add_argument("-co", "--codec", type=str, default="XVID",
     help="codec of output video")
-ap.add_argument("-i", "--input", default="videos/captured001.mp4",
+ap.add_argument("-i", "--input", default="videos/captured012.mp4",
     help="path to input video file")
 args = vars(ap.parse_args())
 
