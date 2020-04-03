@@ -17,7 +17,7 @@ ap.add_argument("-f", "--fps", type=int, default=30,
     help="FPS of output video")
 ap.add_argument("-co", "--codec", type=str, default="XVID",
     help="codec of output video")
-ap.add_argument("-i", "--input", default="videos/captured012.mp4",
+ap.add_argument("-i", "--input", default="videos/captured001.mp4",
     help="path to input video file")
 args = vars(ap.parse_args())
 
@@ -43,6 +43,8 @@ writer = None
 totalDetections = 0
 detectedBeads = {}
 detectedFibers = {}
+fiberLengths = []
+beadAreas = []
 
 # loop over the frames from the video stream
 while(vs.isOpened()):
@@ -66,6 +68,7 @@ while(vs.isOpened()):
         net.setInput(blob)
         detections = net.forward()
         rects = []
+        indexes = []
 
         # loop over the detections
         for i in np.arange(0, detections.shape[2]):
@@ -79,10 +82,10 @@ while(vs.isOpened()):
                 # extract the index of the class label from the
                 # `detections`, then compute the (x, y)-coordinates of
                 # the bounding box for the object
-                idx = int(detections[0, 0, i, 1])
+                idx = int(detections[0, 0, i, 1]) 
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 rects.append(box.astype("int"))
-
+                indexes.append(idx)
                 (startX, startY, endX, endY) = box.astype("int")
 
                 label = "{}: {:.2f}%".format(CLASSES[idx],
@@ -93,19 +96,23 @@ while(vs.isOpened()):
                 cv2.putText(frame, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
 
-        objects = ct.update(rects)
-        areas = ct.getAreas()
-	    
+        objects = ct.update(rects, indexes)
+        lengths = ct.getLengths()
+        heights = ct.getHeights()
+        indices = ct.getIndexes()
+
         # loop over the tracked objects
         for (objectID, centroid) in objects.items():
             # draw both the ID of the object and the centroid of the
             # object on the output frame
             if objectID > totalDetections:
                 totalDetections = objectID
-            if CLASSES[idx] == "bead":
+            if indices[objectID] == 1:
                 detectedBeads[objectID] = 1
-            if CLASSES[idx] == "fiber":
-                detectedFibers[objectID] = 1 
+                beadAreas.append(lengths[objectID]*heights[objectID])
+            if indices[objectID] == 2:
+                detectedFibers[objectID] = 1
+                fiberLengths.append(lengths[objectID])
             text = "ID {}".format(objectID)
             cv2.putText(frame, text, (centroid[0] - 10, centroid[1] - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -127,12 +134,15 @@ totalBeads = len(detectedBeads)-1
 totalFibers = len(detectedFibers)-1
 
 print("[INFO] video ended...")
-for key, value in areas.items():
-    print("Area of ", key, ":", value[0])
 
 print("Total detections: ", totalDetections+1)
 print("Total beads: ", totalBeads+1)
 print("Total fibers: ", totalFibers+1)
+
+for i in detectedFibers:
+    print("Length of Fiber ", i, " = ", fiberLengths[i])
+for i in detectedBeads:
+    print("Area of Bead ", i, " = ", beadAreas[i][0])
 
 # do a bit of cleanup
 vs.release()

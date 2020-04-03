@@ -12,18 +12,22 @@ class CentroidTracker():
 		self.nextObjectID = 0
 		self.objects = OrderedDict()
 		self.disappeared = OrderedDict()
-		self.areas = OrderedDict()
+		self.lengths = OrderedDict()
+		self.heights = OrderedDict()
+		self.indexes = OrderedDict()
 
 		# store the number of maximum consecutive frames a given
 		# object is allowed to be marked as "disappeared" until we
 		# need to deregister the object from tracking
 		self.maxDisappeared = maxDisappeared
 
-	def register(self, centroid, area):
+	def register(self, centroid, length, height, index):
 		# when registering an object we use the next available object
 		# ID to store the centroid
 		self.objects[self.nextObjectID] = centroid
-		self.areas[self.nextObjectID] = area
+		self.lengths[self.nextObjectID] = length
+		self.heights[self.nextObjectID] = height
+		self.indexes[self.nextObjectID] = index
 		self.disappeared[self.nextObjectID] = 0
 		self.nextObjectID += 1
 
@@ -33,7 +37,7 @@ class CentroidTracker():
 		del self.objects[objectID]
 		del self.disappeared[objectID]
 
-	def update(self, rects):
+	def update(self, rects, indices):
 		# check to see if the list of input bounding box rectangles
 		# is empty
 		if len(rects) == 0:
@@ -52,23 +56,25 @@ class CentroidTracker():
 			# to update
 			return self.objects
 
-		# initialize an array of input centroids and areas for the current frame
+		# initialize an array of input centroids and length/height for the current frame
 		inputCentroids = np.zeros((len(rects), 2), dtype="int")
-		inputAreas = np.zeros((len(rects), 2), dtype="int")
+		inputLengths = np.zeros((len(rects), 2), dtype="int")
+		inputHeights = np.zeros((len(rects), 2), dtype="int")
 
 		# loop over the bounding box rectangles
 		for (i, (startX, startY, endX, endY)) in enumerate(rects):
-			# use the bounding box coordinates to derive the centroid and area
+			# use the bounding box coordinates to derive the centroid and length/width
 			cX = int((startX + endX) / 2.0)
 			cY = int((startY + endY) / 2.0)
 			inputCentroids[i] = (cX, cY)
-			inputAreas[i] = abs((endX-startX)*(endY-startY))
+			inputLengths[i] = abs(endX-startX)
+			inputHeights[i] = abs(endY-startY)
 
 		# if we are currently not tracking any objects take the input
 		# centroids and register each of them
 		if len(self.objects) == 0:
 			for i in range(0, len(inputCentroids)):
-				self.register(inputCentroids[i], inputAreas[i])
+				self.register(inputCentroids[i], inputLengths[i], inputHeights[i], indices[i])
 
 		# otherwise, are are currently tracking objects so we need to
 		# try to match the input centroids to existing object
@@ -151,11 +157,16 @@ class CentroidTracker():
 			# register each new input centroid as a trackable object
 			else:
 				for col in unusedCols:
-					self.register(inputCentroids[col], inputAreas[col])
+					self.register(inputCentroids[col], inputLengths[col], inputHeights[col], indices[col])
 
 		# return the set of trackable objects
 		return self.objects
 
-	def getAreas(self):
-		return self.areas
+	def getLengths(self):
+		return self.lengths
 
+	def getHeights(self):
+		return self.heights
+
+	def getIndexes(self):
+		return self.indexes
