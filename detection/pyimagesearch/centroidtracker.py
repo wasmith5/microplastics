@@ -67,8 +67,8 @@ class CentroidTracker():
 			cX = int((startX + endX) / 2.0)
 			cY = int((startY + endY) / 2.0)
 			inputCentroids[i] = (cX, cY)
-			inputLengths[i] = abs(endX-startX)
-			inputHeights[i] = abs(endY-startY)
+			inputLengths[i] = int(endX-startX)
+			inputHeights[i] = int(endY-startY)
 
 		# if we are currently not tracking any objects take the input
 		# centroids and register each of them
@@ -170,3 +170,6 @@ class CentroidTracker():
 
 	def getIndexes(self):
 		return self.indexes
+
+	def getNextID(self):
+		return self.nextObjectID
