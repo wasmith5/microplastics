@@ -1,5 +1,5 @@
 # USAGE
-# python detection/plasticdetection.py --input path/to/input/video --output path/to/output/video
+# python detection/plasticdetection.py --input path/to/input/video --output path/to/output/video --confidence (value from 0 to 1)
 
 # import the necessary packages
 import numpy as np
