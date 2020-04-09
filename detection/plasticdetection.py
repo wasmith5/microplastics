@@ -11,7 +11,7 @@ from pyimagesearch.centroidtracker import CentroidTracker
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--confidence", type=float, default=0.8,
     help="minimum probability to filter weak detections")
-ap.add_argument("-o", "--output", default="videos/output.avi",
+ap.add_argument("-o", "--output", default="videos/output012.avi",
     help="path to output video file")
 ap.add_argument("-f", "--fps", type=int, default=30,
     help="FPS of output video")
