@@ -9,7 +9,7 @@ from pyimagesearch.centroidtracker import CentroidTracker
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--confidence", type=float, default=0.8,
+ap.add_argument("-c", "--confidence", type=float, default=0.80,
     help="minimum probability to filter weak detections")
 ap.add_argument("-o", "--output", default="videos/output012.avi",
     help="path to output video file")
@@ -115,7 +115,7 @@ while(vs.isOpened()):
 lengths = ct.getLengths()
 heights = ct.getHeights()
 indices = ct.getIndexes()
-beadAreas = {}
+beadDiameters = {}
 fiberLengths = {}
 totalBeads = 0
 totalFibers = 0
@@ -125,15 +125,10 @@ size = 137
 for key,value in indices.items():
     if value == 1:
         totalBeads = totalBeads + 1
-        beadAreas[key] = int(lengths[key][0]*heights[key][0])
+        beadDiameters[key] = int(lengths[key][0])
     if value == 2:
         totalFibers = totalFibers + 1
         fiberLengths[key] = int(lengths[key][0])
-    if value == 3:
-        print(lengths[key][0])
-        if sizeFlag == 0:
-            size = int(lengths[key][0])
-            sizeFlag = 1
 
 print("[INFO] video ended...")
 
@@ -143,9 +138,8 @@ print("Total fibers: ", totalFibers)
 
 for key, value in fiberLengths.items():
     print("Length of Fiber ", key, " = ", int(value*500/size), " um")
-for key, value in beadAreas.items():
-    print("Area of Bead ", key, " = ", int(value*(500**2)/(size**2)), " um^2")
-    print("Diameter of Bead", key, " = ", int(lengths[key][0]), " um")
+for key, value in beadDiameters.items():
+    print("Diameter of Bead", key, " = ", int(lengths[key][0]*500/size), " um")
 
 # do a bit of cleanup
 vs.release()
