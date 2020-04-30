@@ -34,7 +34,7 @@ Training via Transfer Learning:
     1. Load training and testing images into transferlearning/data/raw.
 
     2. Run resize_images.py.
-        a. Move resized images into either transferleanint/data/train or transferlearning/data/test.
+        a. Move resized images into either transferlearning/data/train or transferlearning/data/test.
     
     3. Run labelimg.exe software in order to label images for training/testing.
         a. A .xml file will be created for each image.
