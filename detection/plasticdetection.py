@@ -29,7 +29,7 @@ COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 # declare the centroid tracker class used for tracking objects
 ct = CentroidTracker()
 
-# load our serialized model from disk
+# load our trained tensorflow model
 print("[INFO] loading model...")
 net = cv2.dnn.readNetFromTensorflow('models/frozen_inference_graph.pb', 'models/new_label_map.pbtxt')
 
@@ -53,13 +53,17 @@ while(vs.isOpened()):
         h = int(h)
         writer = cv2.VideoWriter(args["output"], fourcc, args["fps"], (w, h), True)
 		
+    # if frame is read successfully
     if ret == True:
 
+        # turn frame into blob for analysis
         blob = cv2.dnn.blobFromImage(frame, size=(300, 300), swapRB=True)
         # pass the blob through the network and obtain the detections and
         # predictions
         net.setInput(blob)
+        # push the frame through the model
         detections = net.forward()
+    
         rects = []
         indexes = []
 
@@ -89,6 +93,7 @@ while(vs.isOpened()):
                 cv2.putText(frame, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
 
+        # update the centroid tracker
         objects = ct.update(rects, indexes)
 
         # loop over the tracked objects
@@ -100,6 +105,7 @@ while(vs.isOpened()):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             cv2.circle(frame, (centroid[0], centroid[1]), 4, (0, 255, 0), -1)
 
+        # write the frame and the boxes to the output video
         writer.write(frame)
 
 	    # show the output frame
@@ -112,30 +118,45 @@ while(vs.isOpened()):
     else:
         break
 
+
+# grab bounding box lengths, heights, and indices from the centroid tracker
 lengths = ct.getLengths()
 heights = ct.getHeights()
 indices = ct.getIndexes()
+
 beadDiameters = {}
 fiberLengths = {}
 totalBeads = 0
 totalFibers = 0
 sizeFlag = 0
+
+# standard scale pixel size for our tests
+# THIS CAN BE CHANGED TO WHATEVER YOU NEED
 size = 137
 
+# loop through all of the tracked objects
 for key,value in indices.items():
+
+    # if the tracked object is a bead
     if value == 1:
         totalBeads = totalBeads + 1
+        # save the value of it's bounding box length as it's diameter
         beadDiameters[key] = int(lengths[key][0])
+    # if the tracked object is a bead
     if value == 2:
         totalFibers = totalFibers + 1
+        # save the value of it's bounding box length as it's length
         fiberLengths[key] = int(lengths[key][0])
 
 print("[INFO] video ended...")
 
+# output the total counts
 print("Total detections: ", ct.getNextID())
 print("Total beads: ", totalBeads)
 print("Total fibers: ", totalFibers)
 
+# output the individual lengths and diameters in real dimensions.
+# THIS CAN BE ADJUSTED FOR DIFFERENT UNITS
 for key, value in fiberLengths.items():
     print("Length of Fiber ", key, " = ", int(value*500/size), " um")
 for key, value in beadDiameters.items():
