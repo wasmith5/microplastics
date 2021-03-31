@@ -1,0 +1,26 @@
+<annotation>
+	<folder>16_bit</folder>
+	<filename>22_bead.png</filename>
+	<path>C:\Users\cheng\Desktop\Research_Assistant\CNN_Data\beads\16_bit\22_bead.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2560</width>
+		<height>600</height>
+		<depth>1</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bead</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1108</xmin>
+			<ymin>214</ymin>
+			<xmax>1320</xmax>
+			<ymax>426</ymax>
+		</bndbox>
+	</object>
+</annotation>
